@@ -15,7 +15,7 @@ extern "C" void app_main(void)
               << std::endl;
     uint8_t idx = 0;
 
-    while (true)
+    while (idx != 5)
     {
         for (uint8_t num : vector)
         {
@@ -28,3 +28,40 @@ extern "C" void app_main(void)
                   << std::endl;
     }
 }
+
+extern "C" class SimpleCircularBuffer
+{
+private:
+    std::vector<int> buffer;
+    size_t nextIndex;
+    size_t maxSize;
+
+public:
+    SimpleCircularBuffer(size_t size) : buffer(size), nextIndex(0), maxSize(size) {}
+
+    void push(int item)
+    {
+        buffer[nextIndex] = item;
+        nextIndex = (nextIndex + 1) % maxSize;
+    }
+
+    int &operator[](size_t index)
+    {
+        return buffer[index];
+    }
+
+    const int &operator[](size_t index) const
+    {
+        return buffer[index];
+    }
+
+    size_t size() const
+    {
+        return maxSize;
+    }
+
+    auto begin() { return buffer.begin(); }
+    auto end() { return buffer.end(); }
+    auto begin() const { return buffer.begin(); }
+    auto end() const { return buffer.end(); }
+};
